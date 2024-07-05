@@ -12,6 +12,14 @@ const animalImages = [
 let firstCard = null;
 let secondCard = null;
 let lockBoard = false;
+let steps = 0;
+let matches = 0;
+const totalPairs = animalImages.length / 2;
+
+const stepsCounter = document.getElementById('steps-counter');
+const bestScoreElement = document.getElementById('best-score');
+let bestScore = localStorage.getItem('bestScore') || Infinity;
+bestScoreElement.textContent = bestScore === Infinity ? 'N/A' : bestScore;
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -33,6 +41,9 @@ function createBoard() {
         cardElement.addEventListener('click', flipCard);
         gameBoard.appendChild(cardElement);
     });
+    steps = 0;
+    matches = 0;
+    updateSteps();
 }
 
 function flipCard() {
@@ -47,12 +58,20 @@ function flipCard() {
     }
 
     secondCard = this;
+    steps++;
+    updateSteps();
     checkForMatch();
 }
 
 function checkForMatch() {
     const isMatch = firstCard.querySelector('img').src === secondCard.querySelector('img').src;
     isMatch ? disableCards() : unflipCards();
+    if (isMatch) {
+        matches++;
+        if (matches === totalPairs) {
+            updateBestScore();
+        }
+    }
 }
 
 function disableCards() {
@@ -72,6 +91,18 @@ function unflipCards() {
 
 function resetBoard() {
     [firstCard, secondCard, lockBoard] = [null, null, false];
+}
+
+function updateSteps() {
+    stepsCounter.textContent = steps;
+}
+
+function updateBestScore() {
+    if (steps < bestScore) {
+        bestScore = steps;
+        bestScoreElement.textContent = bestScore;
+        localStorage.setItem('bestScore', bestScore);
+    }
 }
 
 document.getElementById('reset-button').addEventListener('click', createBoard);
