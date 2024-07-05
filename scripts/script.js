@@ -6,7 +6,24 @@ const animalImages = [
     'assets/animal5.jpg', 'assets/animal5.jpg',
     'assets/animal6.jpg', 'assets/animal6.jpg',
     'assets/animal7.jpg', 'assets/animal7.jpg',
-    'assets/animal8.jpg', 'assets/animal8.jpg'
+    'assets/animal8.jpg', 'assets/animal8.jpg',
+    'assets/animal9.jpg', 'assets/animal9.jpg',
+    'assets/animal10.jpg', 'assets/animal10.jpg',
+    'assets/animal11.jpg', 'assets/animal11.jpg',
+    'assets/animal12.jpg', 'assets/animal12.jpg',
+    'assets/animal13.jpg', 'assets/animal13.jpg',
+    'assets/animal14.jpg', 'assets/animal14.jpg',
+    'assets/animal15.jpg', 'assets/animal15.jpg',
+    'assets/animal16.jpg', 'assets/animal16.jpg',
+    'assets/animal17.jpg', 'assets/animal17.jpg',
+    'assets/animal18.jpg', 'assets/animal18.jpg',
+    'assets/animal19.jpg', 'assets/animal19.jpg',
+    'assets/animal20.jpg', 'assets/animal20.jpg',
+    'assets/animal21.jpg', 'assets/animal21.jpg',
+    'assets/animal22.jpg', 'assets/animal22.jpg',
+    'assets/animal23.jpg', 'assets/animal23.jpg',
+    'assets/animal24.jpg', 'assets/animal24.jpg',
+    'assets/animal25.jpg', 'assets/animal25.jpg'
 ];
 
 let firstCard = null;
@@ -14,12 +31,14 @@ let secondCard = null;
 let lockBoard = false;
 let steps = 0;
 let matches = 0;
-const totalPairs = animalImages.length / 2;
-
+let totalPairs = 8;
 const stepsCounter = document.getElementById('steps-counter');
 const bestScoreElement = document.getElementById('best-score');
+const gridSizeSelect = document.getElementById('grid-size');
 let bestScore = localStorage.getItem('bestScore') || Infinity;
 bestScoreElement.textContent = bestScore === Infinity ? 'N/A' : bestScore;
+
+gridSizeSelect.addEventListener('change', createBoard);
 
 function shuffle(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -29,10 +48,17 @@ function shuffle(array) {
 }
 
 function createBoard() {
+    const gridSize = parseInt(gridSizeSelect.value);
     const gameBoard = document.getElementById('game-board');
+    gameBoard.style.gridTemplateColumns = `repeat(${gridSize}, 100px)`;
     gameBoard.innerHTML = '';
-    shuffle(animalImages);
-    animalImages.forEach(imageSrc => {
+    
+    const numberOfPairs = (gridSize * gridSize) / 2;
+    totalPairs = numberOfPairs;
+    const selectedImages = animalImages.slice(0, numberOfPairs * 2);
+    shuffle(selectedImages);
+
+    selectedImages.forEach(imageSrc => {
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
         const imageElement = document.createElement('img');
@@ -41,6 +67,7 @@ function createBoard() {
         cardElement.addEventListener('click', flipCard);
         gameBoard.appendChild(cardElement);
     });
+
     steps = 0;
     matches = 0;
     updateSteps();
