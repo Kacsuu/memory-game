@@ -1,6 +1,12 @@
-const cardsArray = [
-    'A', 'A', 'B', 'B', 'C', 'C', 'D', 'D', 
-    'E', 'E', 'F', 'F', 'G', 'G', 'H', 'H'
+const animalImages = [
+    'assets/animal1.jpg', 'assets/animal1.jpg',
+    'assets/animal2.jpg', 'assets/animal2.jpg',
+    'assets/animal3.jpg', 'assets/animal3.jpg',
+    'assets/animal4.jpg', 'assets/animal4.jpg',
+    'assets/animal5.jpg', 'assets/animal5.jpg',
+    'assets/animal6.jpg', 'assets/animal6.jpg',
+    'assets/animal7.jpg', 'assets/animal7.jpg',
+    'assets/animal8.jpg', 'assets/animal8.jpg'
 ];
 
 let firstCard = null;
@@ -17,11 +23,13 @@ function shuffle(array) {
 function createBoard() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    shuffle(cardsArray);
-    cardsArray.forEach(cardValue => {
+    shuffle(animalImages);
+    animalImages.forEach(imageSrc => {
         const cardElement = document.createElement('div');
         cardElement.classList.add('card');
-        cardElement.dataset.value = cardValue;
+        const imageElement = document.createElement('img');
+        imageElement.src = imageSrc;
+        cardElement.appendChild(imageElement);
         cardElement.addEventListener('click', flipCard);
         gameBoard.appendChild(cardElement);
     });
@@ -32,7 +40,6 @@ function flipCard() {
     if (this === firstCard) return;
 
     this.classList.add('flipped');
-    this.textContent = this.dataset.value;
 
     if (!firstCard) {
         firstCard = this;
@@ -44,7 +51,7 @@ function flipCard() {
 }
 
 function checkForMatch() {
-    const isMatch = firstCard.dataset.value === secondCard.dataset.value;
+    const isMatch = firstCard.querySelector('img').src === secondCard.querySelector('img').src;
     isMatch ? disableCards() : unflipCards();
 }
 
@@ -59,8 +66,6 @@ function unflipCards() {
     setTimeout(() => {
         firstCard.classList.remove('flipped');
         secondCard.classList.remove('flipped');
-        firstCard.textContent = '';
-        secondCard.textContent = '';
         resetBoard();
     }, 1500);
 }

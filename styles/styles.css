@@ -26,15 +26,20 @@ body {
     justify-content: center;
     align-items: center;
     cursor: pointer;
-    color: white;
-    font-size: 24px;
     border-radius: 8px;
+    overflow: hidden;
+    position: relative;
 }
 
-.card.flipped {
-    background-color: #fff;
-    color: #2e3d49;
-    cursor: default;
+.card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+}
+
+.card.flipped img {
+    display: block;
 }
 
 #reset-button {
