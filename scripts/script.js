@@ -35,8 +35,24 @@ let totalPairs = 8;
 const stepsCounter = document.getElementById('steps-counter');
 const bestScoreElement = document.getElementById('best-score');
 const gridSizeSelect = document.getElementById('grid-size');
-let bestScore = localStorage.getItem('bestScore') || Infinity;
-bestScoreElement.textContent = bestScore === Infinity ? 'N/A' : bestScore;
+
+function getBestScoreKey(gridSize) {
+    return `bestScore_${gridSize}`;
+}
+
+function getBestScore(gridSize) {
+    const bestScore = localStorage.getItem(getBestScoreKey(gridSize));
+    return bestScore ? parseInt(bestScore, 10) : Infinity;
+}
+
+function setBestScore(gridSize, score) {
+    localStorage.setItem(getBestScoreKey(gridSize), score);
+}
+
+function updateBestScoreDisplay(gridSize) {
+    const bestScore = getBestScore(gridSize);
+    bestScoreElement.textContent = bestScore === Infinity ? 'N/A' : bestScore;
+}
 
 gridSizeSelect.addEventListener('change', createBoard);
 
@@ -71,6 +87,7 @@ function createBoard() {
     steps = 0;
     matches = 0;
     updateSteps();
+    updateBestScoreDisplay(gridSize);
 }
 
 function flipCard() {
@@ -125,10 +142,11 @@ function updateSteps() {
 }
 
 function updateBestScore() {
+    const gridSize = parseInt(gridSizeSelect.value);
+    const bestScore = getBestScore(gridSize);
     if (steps < bestScore) {
-        bestScore = steps;
-        bestScoreElement.textContent = bestScore;
-        localStorage.setItem('bestScore', bestScore);
+        setBestScore(gridSize, steps);
+        updateBestScoreDisplay(gridSize);
     }
 }
 
